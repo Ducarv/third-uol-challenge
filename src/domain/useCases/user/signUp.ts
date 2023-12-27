@@ -10,22 +10,7 @@ export class SignUpUserUseCase {
     try {
         const newUser = await this.respotory.signUp(data);
     
-        const hashPassword = crypto
-          .createHash("sha256")
-          .update(data.password)
-          .digest("hex");
-        const hashPasswordConfirm = crypto
-          .createHash("sha256")
-          .update(data.confirmPassword)
-          .digest("hex");
-    
-        const securityUser: IUser = {
-          ...newUser,
-          password: hashPassword,
-          confirmPassword: hashPasswordConfirm
-        };
-    
-        return securityUser;
+        return newUser;
     } catch(error: unknown) {
         if (error instanceof SignUpError) {
             throw new Error("Error to sign user up")
