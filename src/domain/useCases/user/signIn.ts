@@ -10,7 +10,7 @@ export class SignInUserUseCase {
                 throw new CannotSignIn("Email or/and Password cannot be empty");
             }
 
-            const user = await this.repository.signIn(email, password);
+            const user = await this.repository.signIn(email);
             return user;
         } catch(error: unknown) {
             if (error instanceof SignInError) {
