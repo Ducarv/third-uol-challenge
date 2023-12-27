@@ -15,14 +15,9 @@ export class UserPrismaRepository implements UserRepository {
         return newUser as Partial<IUser>;
     }
 
-    async signIn(email: string, password: string) {
-        const target = await prisma.user.findUnique({
-            where: {
-                email,
-                password
-            }
-        })
-
-        return target as Pick<IUser, "firstName" | "lastName" | "email">        
+    async signIn(email: string) {
+        const user = await prisma.user.findUnique({ where: { email } }) 
+        const result = user as Pick<IUser, "firstName" | "lastName" | "email">
+        return result
     }
 }
