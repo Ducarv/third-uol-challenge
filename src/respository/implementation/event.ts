@@ -14,16 +14,16 @@ export class EventPrismaRepository implements EventRepository {
     }
 
     async getEventByQuery(dayOfWeek?: string, desc?: string) {
-        const events = await prisma.event.findRaw({
-            filter: {
-               $or: [
+        const events = await prisma.event.findMany({
+            where: {
+               OR: [
                 { dayOfWeek },
-                { desc }
+                { description: { contains: desc } }
                ]
             }
         })
 
-        return events as unknown as IEvent[]
+        return events as IEvent[]
     }
 
     async deleteEventsByDayOfWeek(dayOfWeek: string) {
