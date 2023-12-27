@@ -17,8 +17,8 @@ describe("SignIn.ts", () => {
   };
 
   let mockRepository: Pick<UserRepository, "signIn"> = {
-    signIn: async (email: string, password: string) => {
-      if (email === mockUser.email && password === mockUser.password) {
+    signIn: async (email: string) => {
+      if (email === mockUser.email) {
         const { password, confirmPassword, ...mockResponse } = mockUser;
         return mockResponse as Partial<IUser>;
       } else {

@@ -32,3 +32,10 @@ export class SignInError extends Error {
         this.name = "SignInError"
     }
 }
+
+export class CreateEventError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "CreateEventError"
+    }
+}
