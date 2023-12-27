@@ -1,7 +1,6 @@
 import { SignUpError } from "../../../providers/errors";
 import { UserRepository } from "../../../respository/user";
 import { IUser } from "../../entities/User";
-import crypto from "node:crypto";
 
 export class SignUpUserUseCase {
   constructor(private respotory: UserRepository) {}
