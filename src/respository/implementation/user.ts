@@ -7,10 +7,12 @@ export class UserPrismaRepository implements UserRepository {
 
     async signUp(data: IUser) {
         const newUser = await prisma.user.create({
-            data: data as Omit<IUser, "events">
+            data: {
+                ...data as Omit<IUser, "events">
+            }
         })
 
-        return newUser as IUser;
+        return newUser as Partial<IUser>;
     }
 
     async signIn(email: string, password: string) {
