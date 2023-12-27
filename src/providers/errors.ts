@@ -12,6 +12,13 @@ export class InternalServerError extends Error {
     }
 }
 
+export class NotAuthenticated extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "NotAuthenticated"
+    }
+}
+
 export class ConfirmPasswordError extends Error {
     constructor(message: string) {
         super(message);
