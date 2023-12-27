@@ -46,3 +46,10 @@ export class CreateEventError extends Error {
         this.name = "CreateEventError"
     }
 }
+
+export class GetEventsError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "GetEventsError"
+    }
+}
