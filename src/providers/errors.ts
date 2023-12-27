@@ -18,3 +18,17 @@ export class ConfirmPasswordError extends Error {
         this.name = "ConfirmPasswordError"
     }
 }
+
+export class CannotSignIn extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "CannotSignIn"
+    }
+}
+
+export class SignInError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "SignInError"
+    }
+}
