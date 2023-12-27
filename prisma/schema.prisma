@@ -21,6 +21,8 @@ model User {
   password        String
   confirmPassword String
   events          Event[]
+
+  @@map("users")
 }
 
 model Event {
@@ -29,4 +31,6 @@ model Event {
   dayOfWeek   String
   userId      String? @db.ObjectId
   User        User?   @relation(fields: [userId], references: [id])
+
+  @@map("events")
 }
