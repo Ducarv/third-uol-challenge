@@ -14,14 +14,20 @@ export class EventPrismaRepository implements EventRepository {
     }
 
     async getEventByQuery(dayOfWeek?: string, desc?: string) {
-        const events = await prisma.event.findMany({
-            where: {
-               OR: [
-                { dayOfWeek },
-                { description: { contains: desc } }
-               ]
-            }
-        })
+        let events;
+        
+        if(!dayOfWeek && !desc) {
+            events = await prisma.event.findMany();
+        } else {
+            events = await prisma.event.findMany({
+                where: {
+                   OR: [
+                    { dayOfWeek },
+                    { description: { contains: desc } }
+                   ]
+                }
+            })
+        }
 
         return events as IEvent[]
     }
