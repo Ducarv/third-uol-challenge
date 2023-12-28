@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { DeleteEventsByDayOfWeekUseCase } from "../../../domain/useCases/event/deleteByDayOfWeek";
-import { DeleteEventsError, InternalServerError } from "../../../providers/errors";
+import { AuthorizationError, DeleteEventsError, InternalServerError } from "../../../providers/errors";
 
 export class DeleteEventsByDayOfWeekController {
   constructor(
@@ -9,9 +9,12 @@ export class DeleteEventsByDayOfWeekController {
 
   async handle(request: Request, response: Response) {
     const { dayOfWeek } = request.query;
+    const userId = request.body.user?.id;
+    
     try {
       const deletedEvents = await this.deleteEventsByDayOfWeekUseCase.execute(
-        dayOfWeek as string
+        dayOfWeek as string,
+        userId as string
       );
 
       response.status(200).json({
@@ -24,6 +27,10 @@ export class DeleteEventsByDayOfWeekController {
 
         if(error instanceof InternalServerError) {
             response.status(500).json({ message: "Something went wrong" });
+        }
+
+        if (error instanceof AuthorizationError) {
+          response.status(403).json({ message: "User is not authorized" });
         }
     }
   }
