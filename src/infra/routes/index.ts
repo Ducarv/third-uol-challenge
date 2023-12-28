@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { signInUserController, signUpUserController } from "../controllers/user";
 import { authToken } from "../../providers/middlewares/auth";
-import { createEventController } from "../controllers/event";
+import { createEventController, getEventByQueryController } from "../controllers/event";
 
 const router = Router();
 
@@ -15,6 +15,10 @@ router.post("/users/sign-in", async (request: Request, response: Response) => {
 
 router.post("/events", authToken, async (request: Request, response: Response) => {
     await createEventController.handle(request, response);
+})
+
+router.get("/events", authToken, async (request: Request, response: Response) => {
+    await getEventByQueryController.handle(request, response);
 })
 
 export { router }
