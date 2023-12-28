@@ -1,9 +1,11 @@
 import { CreateEventUseCase } from "../../../domain/useCases/event/create";
 import { DeleteEventsByDayOfWeekUseCase } from "../../../domain/useCases/event/deleteByDayOfWeek";
+import { GetEventByIdUseCase } from "../../../domain/useCases/event/getById";
 import { GetEventByQueryUseCase } from "../../../domain/useCases/event/getByQuery";
 import { EventPrismaRepository } from "../../../respository/implementation/event";
 import { CreateEventController } from "./create";
 import { DeleteEventsByDayOfWeekController } from "./deleteByDayOfWeek";
+import { GetEventByIdController } from "./getById";
 import { GetEventByQueryController } from "./getByQuery";
 
 const prismaRepository = new EventPrismaRepository();
@@ -22,8 +24,12 @@ const deleteEventsByDayOfWeekController = new DeleteEventsByDayOfWeekController(
   deleteEventsByDayOfWeekUseCase
 );
 
+const getEventByIdUseCase = new GetEventByIdUseCase(prismaRepository);
+const getEventByIdController = new GetEventByIdController(getEventByIdUseCase);
+
 export {
   createEventController,
   getEventByQueryController,
   deleteEventsByDayOfWeekController,
+  getEventByIdController,
 };
