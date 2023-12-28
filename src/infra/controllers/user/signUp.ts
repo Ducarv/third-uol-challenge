@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import { SignUpUserUseCase } from "../../../domain/useCases/user/signUp";
 import { IUser } from "../../../domain/entities/User";
 import { omitUserResponse } from "../../../providers/omitUserResponse";
+import { ValidatorUserInput } from "../../../providers/validators/userInput";
 import {
   ConfirmPasswordError,
   InternalServerError,
+  SignUpError,
 } from "../../../providers/errors";
 import crypto from "node:crypto";
 import "dotenv/config";
@@ -15,6 +17,14 @@ export class SignUpUserController {
   async handle(request: Request, response: Response) {
     try {
       const data: IUser = request.body;
+
+      let validationResult = ValidatorUserInput.safeParse(data);
+
+      if (!validationResult.success) {
+        return response.status(400).json({
+          errors: validationResult.error.issues,
+        });
+      }
 
       if (data.confirmPassword !== data.password) {
         response
@@ -35,11 +45,13 @@ export class SignUpUserController {
         .update(data.confirmPassword)
         .digest("hex");
 
-      const signUpUser = await this.signUpUserUseCase.execute({
-        ...data,
+      let validatedUserInput: IUser = {
+        ...validationResult.data,
         password: hashPassword,
-        confirmPassword: hashConfirm,
-      });
+        confirmPassword: hashConfirm
+      };
+
+      const signUpUser = await this.signUpUserUseCase.execute(validatedUserInput);
 
       const res = omitUserResponse(signUpUser as IUser);
 
@@ -49,6 +61,10 @@ export class SignUpUserController {
         },
       });
     } catch (error: unknown) {
+      if (error instanceof SignUpError) {
+        response.status(409).json(error.message)
+      };
+
       if (error instanceof InternalServerError) {
         response.status(500).json(error);
       }
