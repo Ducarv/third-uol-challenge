@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GetEventByQueryUseCase } from "../../../domain/useCases/event/getEventByQuery";
+import { GetEventByQueryUseCase } from "../../../domain/useCases/event/getByQuery";
 import { GetEventsError } from "../../../providers/errors";
 
 export class GetEventByQueryController {

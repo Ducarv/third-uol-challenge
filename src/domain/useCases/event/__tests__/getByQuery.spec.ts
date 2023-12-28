@@ -1,7 +1,7 @@
 import { GetEventsError } from "../../../../providers/errors";
 import { EventRepository } from "../../../../respository/event";
 import { IEvent } from "../../../entities/Event";
-import { GetEventByQueryUseCase } from "../getEventByQuery";
+import { GetEventByQueryUseCase } from "../getByQuery";
 
 describe("GetEventByQuery.ts", () => {
     let mockEvents: IEvent[] = [
