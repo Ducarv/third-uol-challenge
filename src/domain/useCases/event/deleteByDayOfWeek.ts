@@ -2,7 +2,7 @@ import { DeleteEventsError } from "../../../providers/errors";
 import { EventRepository } from "../../../respository/event";
 import { IEvent } from "../../entities/Event";
 
-export class DeleteEventsByDayOfWeek {
+export class DeleteEventsByDayOfWeekUseCase {
     constructor(private repository: EventRepository) {}
 
     async execute(dayOfWeek: string) {

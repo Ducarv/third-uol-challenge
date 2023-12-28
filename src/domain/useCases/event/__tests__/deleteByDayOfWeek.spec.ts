@@ -1,13 +1,13 @@
 import { DeleteEventsError } from "../../../../providers/errors";
 import { EventRepository } from "../../../../respository/event";
-import { DeleteEventsByDayOfWeek } from "../deleteByDayOfWeek";
+import { DeleteEventsByDayOfWeekUseCase } from "../deleteByDayOfWeek";
 
 describe("DeleteEventsByDayOfWeek", () => {
     const mockRepository: Partial<EventRepository> = {
       deleteEventsByDayOfWeek: jest.fn(),
     };
   
-    const deleteEventsByDayOfWeek = new DeleteEventsByDayOfWeek(
+    const deleteEventsByDayOfWeek = new DeleteEventsByDayOfWeekUseCase(
       mockRepository as EventRepository
     );
   
