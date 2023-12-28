@@ -1,13 +1,13 @@
 import { DeleteEventsError } from "../../../../providers/errors"
 import { EventRepository } from "../../../../respository/event"
-import { DeleteEventById } from "../deleteById"
+import { DeleteEventByIdUseCase } from "../deleteById"
 
 describe("DeleteEventById.ts", () => {
     const mockRepository: Partial<EventRepository> = {
         deleteEventById: jest.fn(),
     }
 
-    const deleteEventById = new DeleteEventById(
+    const deleteEventById = new DeleteEventByIdUseCase(
         mockRepository as EventRepository
     )
 

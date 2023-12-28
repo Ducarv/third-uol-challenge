@@ -1,7 +1,7 @@
 import { DeleteEventsError, NotFound } from "../../../providers/errors";
 import { EventRepository } from "../../../respository/event";
 
-export class DeleteEventById {
+export class DeleteEventByIdUseCase {
     constructor(private repository: EventRepository) {}
 
     async execute(id: string) {
