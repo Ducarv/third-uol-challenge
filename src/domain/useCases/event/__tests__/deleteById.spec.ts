@@ -23,11 +23,12 @@ describe("DeleteEventById.ts", () => {
             mockEvent as any
         )
 
-        const result = await deleteEventById.execute(expectedId);
+        const result = await deleteEventById.execute(expectedId, "userId");
 
         expect(result).toEqual(mockEvent);
         expect(mockRepository.deleteEventById).toHaveBeenCalledWith(
-            expectedId
+            expectedId,
+            "userId"
         )
     });
 
@@ -39,11 +40,12 @@ describe("DeleteEventById.ts", () => {
         )
 
         await expect(
-            deleteEventById.execute(expectedId)
+            deleteEventById.execute(expectedId, "userId")
         ).rejects.toThrow(DeleteEventsError);
 
         expect(mockRepository.deleteEventById).toHaveBeenCalledWith(
-            expectedId
+            expectedId,
+            "userId"
         )
     })
 })
