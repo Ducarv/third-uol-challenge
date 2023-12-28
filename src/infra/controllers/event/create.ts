@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { CreateEventUseCase } from "../../../domain/useCases/event/create";
 import { InternalServerError, NotAuthenticated } from "../../../providers/errors";
+import { IEvent } from "../../../domain/entities/Event";
+import { ValidatorEventInput } from "../../../providers/validators/eventInput";
 
 export class CreateEventController {
     constructor(private createEventUseCase: CreateEventUseCase) {}
@@ -14,13 +16,24 @@ export class CreateEventController {
                 response.status(401).json({ message: "Not Authenticated"});
             }
 
-            const newEvent = await this.createEventUseCase.execute({
+            const eventBody: IEvent = {
                 description,
                 dayOfWeek,
                 userId
-            })
+            }
 
-            response.status(201).json(newEvent);
+            const validatedEventResult = ValidatorEventInput.safeParse(eventBody)
+            
+            if(validatedEventResult.success) {
+                const eventData = validatedEventResult.data;
+                const newEvent = await this.createEventUseCase.execute(eventData)
+                response.status(201).json(newEvent);
+            } else {
+                response.status(400).json({
+                    errors: validatedEventResult.error.issues
+                })
+            }
+
         } catch(error: unknown) {
             if(error instanceof NotAuthenticated) {
                 response.status(401).json({ message: "Not Authenticated" })
