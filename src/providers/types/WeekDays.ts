@@ -1,4 +1,4 @@
-export enum WeekDays {
+export const WeekDays = [
     "sunday",
     "monday",
     "tuesday",
@@ -6,4 +6,4 @@ export enum WeekDays {
     "thursday",
     "friday",
     "saturday"
-}
+]
