@@ -33,13 +33,19 @@ export class EventPrismaRepository implements EventRepository {
     }
 
     async deleteEventsByDayOfWeek(dayOfWeek: string) {
-        const deletedEvents = await prisma.event.deleteMany({
+        const eventsToDelete = await prisma.event.findMany({
             where: {
                 dayOfWeek
             }
         })
 
-        return `${dayOfWeek} events deleted`
+        await prisma.event.deleteMany({
+            where: {
+                dayOfWeek
+            }
+        })
+
+        return eventsToDelete as IEvent[]
     }
 
     async getEventById(id: string) {
