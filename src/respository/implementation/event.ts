@@ -1,5 +1,6 @@
 import { IEvent } from "../../domain/entities/Event";
 import { prisma } from "../../infra/database";
+import { DeleteEventsError } from "../../providers/errors";
 import { EventRepository } from "../event";
 
 export class EventPrismaRepository implements EventRepository {
@@ -32,16 +33,22 @@ export class EventPrismaRepository implements EventRepository {
         return events as IEvent[]
     }
 
-    async deleteEventsByDayOfWeek(dayOfWeek: string) {
+    async deleteEventsByDayOfWeek(dayOfWeek: string, userId?: string) {
         const eventsToDelete = await prisma.event.findMany({
             where: {
-                dayOfWeek
+                dayOfWeek,
+                userId
             }
         })
 
+        if (!eventsToDelete) {
+            throw new DeleteEventsError("Events not found");
+        }
+
         await prisma.event.deleteMany({
             where: {
-                dayOfWeek
+                dayOfWeek,
+                userId
             }
         })
 
@@ -58,10 +65,22 @@ export class EventPrismaRepository implements EventRepository {
         return target as IEvent;
     }
 
-    async deleteEventById(id: string) {
-        const deletedEvent = await prisma.event.delete({
+    async deleteEventById(id: string, userId?: string) {
+        const eventToDelete = await prisma.event.findUnique({
             where: {
-                id
+                id,
+                userId,
+            },
+        });
+
+        if (!eventToDelete) {
+            throw new DeleteEventsError("Event not found");
+        }
+
+        await prisma.event.delete({
+            where: {
+                id,
+                userId
             }
         })
 
