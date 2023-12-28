@@ -26,6 +26,13 @@ export class NotAuthenticated extends Error {
     }
 }
 
+export class AuthorizationError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "AuthorizationError"
+    }
+}
+
 export class ConfirmPasswordError extends Error {
     constructor(message: string) {
         super(message);
