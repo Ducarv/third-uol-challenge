@@ -10,5 +10,5 @@ export interface IUser {
     email: string
     password: string
     confirmPassword: string
-    events: IEvent[]
+    events?: IEvent[]
 }
