@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { signInUserController, signUpUserController } from "../controllers/user";
 import { authToken } from "../../providers/middlewares/auth";
-import { createEventController, deleteEventsByDayOfWeekController, getEventByIdController, getEventByQueryController } from "../controllers/event";
+import { createEventController, deleteEventByIdController, deleteEventsByDayOfWeekController, getEventByIdController, getEventByQueryController } from "../controllers/event";
 
 const router = Router();
 
@@ -27,6 +27,10 @@ router.delete("/events", authToken, async (request: Request, response: Response)
 
 router.get("/events/:id", authToken, async (request: Request, response: Response) => {
     await getEventByIdController.handle(request, response);
+})
+
+router.delete("/events/:id", authToken, async (request: Request, response: Response) => {
+    await deleteEventByIdController.handle(request, response);
 })
 
 export { router }
