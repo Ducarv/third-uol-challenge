@@ -1,0 +1,332 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Challenge 3 - Week 11 - Node & AWS",
+        "description": "The application will serve as a REST API for managing users and events.",
+        "version": "1.0.0"
+    },
+    "components": {
+        "securitySchemes": {
+          "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          }
+        }
+      },
+    "paths": {
+        "/users/sign-up": {
+            "post": {
+                "summary": "Register an user",
+                "description": "Create a new user on the system.",
+                "tags": ["User"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "firstName": "John",
+                                        "lastName": "Doe",
+                                        "birthDate": "01/01/2000",
+                                        "city": "Toronto",
+                                        "country": "Canada",
+                                        "email": "john@mail.com",
+                                        "password": "john12345",
+                                        "confirmPassword": "john12345"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Return the created customer."
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "type": "Validation Error",
+                                            "errors": [
+                                                {
+                                                    "resource": "email",
+                                                    "message": "invalid email"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "statusCode": 500,
+                                            "error": "Internal Server Error",
+                                            "message": "Something went wrong"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/sign-in": {
+            "post": {
+                "summary": "Log user in",
+                "description": "Log user in the system.",
+                "tags": ["User"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "john@mail.com",
+                                        "password": "john12345"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Return the logged customer."
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {        
+                                            "resource": "CannotSignIn",
+                                            "message": "Invalid email or password"                                              
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "statusCode": 500,
+                                            "error": "Internal Server Error",
+                                            "message": "Something went wrong"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events": {
+            "get": {
+              "summary": "Get events",
+              "description": "Get events by optional query.",
+              "tags": ["Event"],
+              "parameters": [
+                {
+                  "name": "dayOfWeek",
+                  "in": "query",
+                  "description": "Day of the week (e.g., 'sunday', 'monday', etc.)",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "desc",
+                  "in": "query",
+                  "description": "Description",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "responses": {
+                "200": {
+                    "description": "Return the events."
+                },
+                "404": {
+                    "description": "Not found - GetEventsError."
+                },
+                "500": {
+                    "description": "Something went wrong."
+                }
+              }
+            },
+            "post": {
+              "summary": "Create new event",
+              "description": "Create a new event.",
+              "tags": ["Event"],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "dayOfWeek": {
+                          "type": "string",
+                          "enum": ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                    "description": "Event created."
+                },
+                "400": {
+                    "description": "Bad request."
+                },
+                "401": {
+                    "description": "Not Authenticated."
+                },
+                "500": {
+                    "description": "Something went wrong."
+                }
+              }
+            },
+            "delete": {
+              "summary": "Delete event",
+              "description": "Delete a specific event by day of week.",
+              "tags": ["Event"],
+              "parameters": [
+                {
+                  "name": "dayOfWeek",
+                  "in": "query",
+                  "description": "Day of the week in lowercase English (e.g., 'sunday', 'monday', etc.)",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "responses": {
+                "200": {
+                    "description": "Events deleted."
+                },
+                "404": {
+                    "description": "Not found - DeleteEventsError."
+                },
+                "500": {
+                    "description": "Something went wrong."
+                },
+                "403": {
+                    "description": "User is not authorized - AuthorizationError."
+                }
+              }
+            }
+        },
+        "/events/{id}": {
+            "get": {
+              "summary": "Get event by id",
+              "description": "Get events by id.",
+              "tags": ["Event"],
+              "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the event",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "responses": {
+                "200": {
+                    "description": "Return the events."
+                },
+                "404": {
+                    "description": "Not found - GetEventsError."
+                },
+                "500": {
+                    "description": "Something went wrong."
+                }
+              }
+            },
+            "delete": {
+              "summary": "Delete event by id",
+              "description": "Delete a specific event by day of week.",
+              "tags": ["Event"],
+              "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the event",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "responses": {
+                "204": {
+                    "description": "Event deleted."
+                },
+                "404": {
+                    "description": "Not found - DeleteEventsError."
+                },
+                "500": {
+                    "description": "Something went wrong."
+                },
+                "403": {
+                    "description": "User is not authorized - AuthorizationError."
+                }
+              }
+            }
+        }
+    }
+}
