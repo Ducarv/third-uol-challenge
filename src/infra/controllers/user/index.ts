@@ -1,7 +1,7 @@
-import { SignInUserUseCase } from "../../../domain/useCases/user/signIn";
-import { SignUpUserUseCase } from "../../../domain/useCases/user/signUp";
-import { UserPrismaRepository } from "../../../respository/implementation/user";
-import { SignUpUserController } from "./signUp";
+import { SignInUserUseCase } from '../../../domain/useCases/user/signIn';
+import { SignUpUserUseCase } from '../../../domain/useCases/user/signUp';
+import { UserPrismaRepository } from '../../../respository/implementation/user';
+import { SignUpUserController } from './signUp';
 import { SingInUserController } from './signIn';
 
 const prismaRepository = new UserPrismaRepository();

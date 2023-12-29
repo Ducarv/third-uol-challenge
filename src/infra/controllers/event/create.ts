@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { CreateEventUseCase } from "../../../domain/useCases/event/create";
+import { Request, Response } from 'express';
+import { CreateEventUseCase } from '../../../domain/useCases/event/create';
 import {
   InternalServerError,
   NotAuthenticated,
-} from "../../../providers/errors";
-import { IEvent } from "../../../domain/entities/Event";
-import { ValidatorEventInput } from "../../../providers/validators/eventInput";
-import { WeekDays } from "../../../providers/types/WeekDays";
+} from '../../../providers/errors';
+import { IEvent } from '../../../domain/entities/Event';
+import { ValidatorEventInput } from '../../../providers/validators/eventInput';
+import { WeekDays } from '../../../providers/types/WeekDays';
 
 export class CreateEventController {
   constructor(private createEventUseCase: CreateEventUseCase) {}
@@ -17,13 +17,13 @@ export class CreateEventController {
 
     try {
       if (!userId) {
-        response.status(401).json({ message: "Not Authenticated" });
+        response.status(401).json({ message: 'Not Authenticated' });
       }
 
       if (!WeekDays.includes(dayOfWeek)) {
         return response
           .status(400)
-          .json({ message: "Invalid dayOfWeek", WeekDays });
+          .json({ message: 'Invalid dayOfWeek', WeekDays });
       }
 
       const eventBody: IEvent = {
@@ -45,10 +45,10 @@ export class CreateEventController {
       }
     } catch (error: unknown) {
       if (error instanceof NotAuthenticated) {
-        response.status(401).json({ message: "Not Authenticated" });
+        response.status(401).json({ message: 'Not Authenticated' });
       }
       if (error instanceof InternalServerError) {
-        response.status(500).json({ message: "Something went wrong" });
+        response.status(500).json({ message: 'Something went wrong' });
       }
     }
   }

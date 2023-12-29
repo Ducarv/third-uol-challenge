@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { SignUpUserUseCase } from "../../../domain/useCases/user/signUp";
-import { IUser } from "../../../domain/entities/User";
-import { omitUserResponse } from "../../../providers/omitUserResponse";
-import { ValidatorUserInput } from "../../../providers/validators/userInput";
+import { Request, Response } from 'express';
+import { SignUpUserUseCase } from '../../../domain/useCases/user/signUp';
+import { IUser } from '../../../domain/entities/User';
+import { omitUserResponse } from '../../../providers/omitUserResponse';
+import { ValidatorUserInput } from '../../../providers/validators/userInput';
 import {
   ConfirmPasswordError,
   InternalServerError,
   SignUpError,
-} from "../../../providers/errors";
-import crypto from "node:crypto";
-import "dotenv/config";
+} from '../../../providers/errors';
+import crypto from 'node:crypto';
+import 'dotenv/config';
 
 export class SignUpUserController {
   constructor(private signUpUserUseCase: SignUpUserUseCase) {}
@@ -18,7 +18,7 @@ export class SignUpUserController {
     try {
       const data: IUser = request.body;
 
-      let validationResult = ValidatorUserInput.safeParse(data);
+      const validationResult = ValidatorUserInput.safeParse(data);
 
       if (!validationResult.success) {
         return response.status(400).json({
@@ -31,27 +31,28 @@ export class SignUpUserController {
           .status(406)
           .json(
             new ConfirmPasswordError(
-              "Password and Confirmation should be strict equal."
-            ).message
+              'Password and Confirmation should be strict equal.',
+            ).message,
           );
       }
 
       const hashPassword = crypto
-        .createHash("sha256")
+        .createHash('sha256')
         .update(data.password)
-        .digest("hex");
+        .digest('hex');
       const hashConfirm = crypto
-        .createHash("sha256")
+        .createHash('sha256')
         .update(data.confirmPassword)
-        .digest("hex");
+        .digest('hex');
 
-      let validatedUserInput: IUser = {
+      const validatedUserInput: IUser = {
         ...validationResult.data,
         password: hashPassword,
-        confirmPassword: hashConfirm
+        confirmPassword: hashConfirm,
       };
 
-      const signUpUser = await this.signUpUserUseCase.execute(validatedUserInput);
+      const signUpUser =
+        await this.signUpUserUseCase.execute(validatedUserInput);
 
       const res = omitUserResponse(signUpUser as IUser);
 
@@ -62,8 +63,8 @@ export class SignUpUserController {
       });
     } catch (error: unknown) {
       if (error instanceof SignUpError) {
-        response.status(409).json(error.message)
-      };
+        response.status(409).json(error.message);
+      }
 
       if (error instanceof InternalServerError) {
         response.status(500).json(error);

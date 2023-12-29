@@ -1,89 +1,86 @@
-import { IEvent } from "../../domain/entities/Event";
-import { prisma } from "../../infra/database";
-import { DeleteEventsError } from "../../providers/errors";
-import { EventRepository } from "../event";
+import { IEvent } from '../../domain/entities/Event';
+import { prisma } from '../../infra/database';
+import { DeleteEventsError } from '../../providers/errors';
+import { EventRepository } from '../event';
 
 export class EventPrismaRepository implements EventRepository {
-    constructor() {};
+  constructor() {}
 
-    async create(data: IEvent) {
-        const newEvent = await prisma.event.create({
-            data: data
-        })
+  async create(data: IEvent) {
+    const newEvent = await prisma.event.create({
+      data: data,
+    });
 
-        return newEvent as IEvent;
+    return newEvent as IEvent;
+  }
+
+  async getEventByQuery(dayOfWeek?: string, desc?: string) {
+    let events;
+
+    if (!dayOfWeek && !desc) {
+      events = await prisma.event.findMany();
+    } else {
+      events = await prisma.event.findMany({
+        where: {
+          OR: [{ dayOfWeek }, { description: { contains: desc } }],
+        },
+      });
     }
 
-    async getEventByQuery(dayOfWeek?: string, desc?: string) {
-        let events;
-        
-        if(!dayOfWeek && !desc) {
-            events = await prisma.event.findMany();
-        } else {
-            events = await prisma.event.findMany({
-                where: {
-                   OR: [
-                    { dayOfWeek },
-                    { description: { contains: desc } }
-                   ]
-                }
-            })
-        }
+    return events as IEvent[];
+  }
 
-        return events as IEvent[]
+  async deleteEventsByDayOfWeek(dayOfWeek: string, userId?: string) {
+    const eventsToDelete = await prisma.event.findMany({
+      where: {
+        dayOfWeek,
+        userId,
+      },
+    });
+
+    if (!eventsToDelete) {
+      throw new DeleteEventsError('Events not found');
     }
 
-    async deleteEventsByDayOfWeek(dayOfWeek: string, userId?: string) {
-        const eventsToDelete = await prisma.event.findMany({
-            where: {
-                dayOfWeek,
-                userId
-            }
-        })
+    await prisma.event.deleteMany({
+      where: {
+        dayOfWeek,
+        userId,
+      },
+    });
 
-        if (!eventsToDelete) {
-            throw new DeleteEventsError("Events not found");
-        }
+    return eventsToDelete as IEvent[];
+  }
 
-        await prisma.event.deleteMany({
-            where: {
-                dayOfWeek,
-                userId
-            }
-        })
+  async getEventById(id: string) {
+    const target = await prisma.event.findUnique({
+      where: {
+        id,
+      },
+    });
 
-        return eventsToDelete as IEvent[]
+    return target as IEvent;
+  }
+
+  async deleteEventById(id: string, userId?: string) {
+    const eventToDelete = await prisma.event.findUnique({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    if (!eventToDelete) {
+      throw new DeleteEventsError('Event not found');
     }
 
-    async getEventById(id: string) {
-        const target = await prisma.event.findUnique({
-            where: {
-                id
-            }
-        })
+    await prisma.event.delete({
+      where: {
+        id,
+        userId,
+      },
+    });
 
-        return target as IEvent;
-    }
-
-    async deleteEventById(id: string, userId?: string) {
-        const eventToDelete = await prisma.event.findUnique({
-            where: {
-                id,
-                userId,
-            },
-        });
-
-        if (!eventToDelete) {
-            throw new DeleteEventsError("Event not found");
-        }
-
-        await prisma.event.delete({
-            where: {
-                id,
-                userId
-            }
-        })
-
-        return `Event with id: ${id} deleted.`
-    }
+    return `Event with id: ${id} deleted.`;
+  }
 }

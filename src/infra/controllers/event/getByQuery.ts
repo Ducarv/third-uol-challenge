@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { GetEventByQueryUseCase } from "../../../domain/useCases/event/getByQuery";
-import { GetEventsError } from "../../../providers/errors";
+import { Request, Response } from 'express';
+import { GetEventByQueryUseCase } from '../../../domain/useCases/event/getByQuery';
+import { GetEventsError } from '../../../providers/errors';
 
 export class GetEventByQueryController {
   constructor(private getEventByQueryUseCase: GetEventByQueryUseCase) {}
@@ -11,14 +11,14 @@ export class GetEventByQueryController {
     try {
       const events = await this.getEventByQueryUseCase.execute(
         dayOfWeek as string,
-        desc as string
+        desc as string,
       );
 
       response.status(200).json(events);
     } catch (error: unknown) {
-        if(error instanceof GetEventsError) {
-            response.status(404).json({ message: "Not found" });
-        }
+      if (error instanceof GetEventsError) {
+        response.status(404).json({ message: 'Not found' });
+      }
     }
   }
 }

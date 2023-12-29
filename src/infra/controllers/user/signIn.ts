@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import { SignInUserUseCase } from "../../../domain/useCases/user/signIn";
-import { CannotSignIn, InternalServerError } from "../../../providers/errors";
-import * as jwt from "jsonwebtoken";
-import * as bcrypt from "bcrypt";
+import { Request, Response } from 'express';
+import { SignInUserUseCase } from '../../../domain/useCases/user/signIn';
+import { CannotSignIn, InternalServerError } from '../../../providers/errors';
+import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 
 export class SingInUserController {
   constructor(private signInUserUseCase: SignInUserUseCase) {}
@@ -12,22 +12,19 @@ export class SingInUserController {
 
     try {
       if (!email || !password) {
-        throw new CannotSignIn("Email or Password cannot be empty");
+        throw new CannotSignIn('Email or Password cannot be empty');
       }
 
       const user = await this.signInUserUseCase.execute(email, password);
 
       if (!user) {
-        throw new CannotSignIn("Invalid email or password");
+        throw new CannotSignIn('Invalid email or password');
       }
 
-      const passwordMatch = bcrypt.compare(
-          password,
-          user.password as string
-      );
+      const passwordMatch = bcrypt.compare(password, user.password as string);
 
       if (!passwordMatch) {
-        throw new CannotSignIn("Invalid email or password");
+        throw new CannotSignIn('Invalid email or password');
       }
 
       const secret = process.env.SECRET_KEY as jwt.Secret;
@@ -39,8 +36,8 @@ export class SingInUserController {
         },
         secret,
         {
-          expiresIn: "2h",
-        }
+          expiresIn: '2h',
+        },
       );
 
       response.status(200).json({
@@ -49,7 +46,7 @@ export class SingInUserController {
         user: {
           firstName: user.firstName,
           lastName: user.lastName,
-          email: user.email
+          email: user.email,
         },
       });
     } catch (error: unknown) {

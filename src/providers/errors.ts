@@ -1,76 +1,76 @@
 export class SignUpError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "SignUpError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'SignUpError';
+  }
 }
 
 export class InternalServerError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "InternalServerError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'InternalServerError';
+  }
 }
 
 export class NotFound extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "NotFound"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'NotFound';
+  }
 }
 
 export class NotAuthenticated extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "NotAuthenticated"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'NotAuthenticated';
+  }
 }
 
 export class AuthorizationError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "AuthorizationError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthorizationError';
+  }
 }
 
 export class ConfirmPasswordError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "ConfirmPasswordError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConfirmPasswordError';
+  }
 }
 
 export class CannotSignIn extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "CannotSignIn"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'CannotSignIn';
+  }
 }
 
 export class SignInError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "SignInError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'SignInError';
+  }
 }
 
 export class CreateEventError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "CreateEventError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'CreateEventError';
+  }
 }
 
 export class GetEventsError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "GetEventsError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'GetEventsError';
+  }
 }
 
 export class DeleteEventsError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "DeleteEventsError"
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'DeleteEventsError';
+  }
 }
