@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { SignInUserUseCase } from '../../../domain/useCases/user/signIn';
 import { CannotSignIn, InternalServerError } from '../../../providers/errors';
 import * as jwt from 'jsonwebtoken';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 export class SingInUserController {
   constructor(private signInUserUseCase: SignInUserUseCase) {}
