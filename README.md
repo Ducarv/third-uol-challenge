@@ -27,7 +27,7 @@ ensuring scalability and reliability in deployment.
 - Run:
   
    ```bash
-  docker-compose up --build
+  docker-compose up
 
 ### API Endpoints
 
