@@ -22,6 +22,9 @@ export class DeleteEventByIdUseCase {
       if (error instanceof AuthorizationError) {
         throw new AuthorizationError('User is not authorized to delete events');
       }
+      if (error instanceof NotFound) {
+        throw new NotFound('Id not found or not provided');
+      }
     }
   }
 }

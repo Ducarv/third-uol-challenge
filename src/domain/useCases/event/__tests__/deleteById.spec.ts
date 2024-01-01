@@ -1,4 +1,8 @@
-import { DeleteEventsError } from '../../../../providers/errors';
+import {
+  AuthorizationError,
+  DeleteEventsError,
+  NotFound,
+} from '../../../../providers/errors';
 import { EventRepository } from '../../../../respository/event';
 import { DeleteEventByIdUseCase } from '../deleteById';
 
@@ -41,6 +45,34 @@ describe('DeleteEventById.ts', () => {
 
     await expect(deleteEventById.execute(expectedId, 'userId')).rejects.toThrow(
       DeleteEventsError,
+    );
+
+    expect(mockRepository.deleteEventById).toHaveBeenCalledWith(
+      expectedId,
+      'userId',
+    );
+  });
+
+  it('should throw NotFound error if id is not provided', async () => {
+    const expectedId = '';
+
+    await expect(deleteEventById.execute(expectedId, 'userId')).rejects.toThrow(
+      NotFound,
+    );
+
+    expect(mockRepository.deleteEventById).not.toHaveBeenCalled();
+  });
+
+  it('should throw AuthorizationError if user is not authorized', async () => {
+    const expectedId = '1';
+    const authorizationError = new AuthorizationError('User is not authorized');
+
+    (mockRepository.deleteEventById as jest.Mock).mockRejectedValueOnce(
+      authorizationError,
+    );
+
+    await expect(deleteEventById.execute(expectedId, 'userId')).rejects.toThrow(
+      AuthorizationError,
     );
 
     expect(mockRepository.deleteEventById).toHaveBeenCalledWith(
