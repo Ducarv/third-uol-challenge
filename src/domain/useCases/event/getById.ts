@@ -16,6 +16,9 @@ export class GetEventByIdUseCase {
       if (error instanceof GetEventsError) {
         throw new GetEventsError('Error to get events');
       }
+      if (error instanceof NotFound) {
+        throw new NotFound('Id not found or not provided');
+      }
     }
   }
 }

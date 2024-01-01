@@ -1,4 +1,4 @@
-import { GetEventsError } from '../../../../providers/errors';
+import { GetEventsError, NotFound } from '../../../../providers/errors';
 import { EventRepository } from '../../../../respository/event';
 import { GetEventByIdUseCase } from '../getById';
 
@@ -39,5 +39,13 @@ describe('GetEventById.ts', () => {
     );
 
     expect(mockRepository.getEventById).toHaveBeenCalledWith(expectedId);
+  });
+
+  it('should throw NotFound error if id is not provided', async () => {
+    const expectedId = '';
+
+    await expect(getEventById.execute(expectedId)).rejects.toThrow(NotFound);
+
+    expect(mockRepository.getEventById).not.toHaveBeenCalled();
   });
 });
