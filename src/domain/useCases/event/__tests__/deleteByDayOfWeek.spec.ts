@@ -1,4 +1,7 @@
-import { DeleteEventsError } from '../../../../providers/errors';
+import {
+  AuthorizationError,
+  DeleteEventsError,
+} from '../../../../providers/errors';
 import { EventRepository } from '../../../../respository/event';
 import { DeleteEventsByDayOfWeekUseCase } from '../deleteByDayOfWeek';
 
@@ -47,6 +50,25 @@ describe('DeleteEventsByDayOfWeek', () => {
     await expect(
       deleteEventsByDayOfWeek.execute(expectedDayOfWeek, 'userId'),
     ).rejects.toThrow(DeleteEventsError);
+
+    expect(mockRepository.deleteEventsByDayOfWeek).toHaveBeenCalledWith(
+      expectedDayOfWeek,
+      'userId',
+    );
+  });
+
+  it('should throw AuthorizationError if user is not authorized', async () => {
+    const expectedDayOfWeek = 'Monday';
+    const authorizationError = new AuthorizationError(
+      'User is not authorized to delete events',
+    );
+    (mockRepository.deleteEventsByDayOfWeek as jest.Mock).mockRejectedValueOnce(
+      authorizationError,
+    );
+
+    await expect(
+      deleteEventsByDayOfWeek.execute(expectedDayOfWeek, 'userId'),
+    ).rejects.toThrow(AuthorizationError);
 
     expect(mockRepository.deleteEventsByDayOfWeek).toHaveBeenCalledWith(
       expectedDayOfWeek,
