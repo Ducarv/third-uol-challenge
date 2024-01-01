@@ -28,13 +28,9 @@ export class SignUpUserController {
       }
 
       if (data.confirmPassword !== data.password) {
-        response
-          .status(400)
-          .json(
-            new ConfirmPasswordError(
-              'Password and Confirmation should be strict equal.',
-            ).message,
-          );
+        response.status(400).json({
+          message: 'Password and Confirmation should be strict equal.',
+        });
       }
 
       const hashPassword = crypto
@@ -63,6 +59,11 @@ export class SignUpUserController {
         },
       });
     } catch (error: unknown) {
+      if (error instanceof SignUpError) {
+        return response.status(400).json({
+          message: 'Email already in use',
+        });
+      }
       if (error instanceof InternalServerError) {
         response.status(500).json({ message: 'Internal Server Error' });
       }
