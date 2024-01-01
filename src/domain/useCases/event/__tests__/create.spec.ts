@@ -14,9 +14,13 @@ describe('Create.ts', () => {
     create: async (data: IEvent) => ({ id: '01', ...data }),
   };
 
-  const create = new CreateEventUseCase(mockRepository as EventRepository);
+  let create: CreateEventUseCase;
 
-  it('should create a event correctly', async () => {
+  beforeEach(() => {
+    create = new CreateEventUseCase(mockRepository as EventRepository);
+  });
+
+  it('should create an event correctly', async () => {
     const sut = await create.execute(mockEvent);
     if (sut) {
       expect(sut.id).toBeDefined();
@@ -28,13 +32,13 @@ describe('Create.ts', () => {
 
   it('should handle errors correctly', async () => {
     const error = new CreateEventError('Error to create an event.');
-    jest.spyOn(create, 'execute').mockRejectedValueOnce(error);
+    jest.spyOn(mockRepository, 'create').mockRejectedValueOnce(error);
 
     try {
-      //@ts-ignore
-      await create.execute();
-      fail('Throw error');
+      await create.execute(mockEvent);
+      fail('Should throw error');
     } catch (caughtError: unknown) {
+      expect(caughtError).toBeInstanceOf(CreateEventError);
       if (caughtError instanceof CreateEventError) {
         expect(caughtError.message).toEqual(error.message);
       }
