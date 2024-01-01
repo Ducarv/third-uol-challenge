@@ -30,10 +30,6 @@ export class DeleteEventByIdController {
       if (error instanceof InternalServerError) {
         response.status(500).json({ message: 'Something went wrong' });
       }
-
-      if (error instanceof AuthorizationError) {
-        response.status(403).json({ message: 'User is not authorized' });
-      }
     }
   }
 }
