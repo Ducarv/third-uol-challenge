@@ -19,7 +19,14 @@ export class DeleteEventByIdController {
         response.status(404).json(new NotFound('Id not found or not provided'));
       }
 
-      await this.deleteEventByIdUseCase.execute(id, userId);
+      const deletedEvent = await this.deleteEventByIdUseCase.execute(
+        id,
+        userId,
+      );
+
+      if (!deletedEvent) {
+        return response.status(404).json({ message: 'Event not found' });
+      }
 
       response.status(204).json('event deleted');
     } catch (error: unknown) {

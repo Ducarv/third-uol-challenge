@@ -253,7 +253,7 @@
                 "500": {
                     "description": "Something went wrong."
                 },
-                "403": {
+                "401": {
                     "description": "User is not authorized - AuthorizationError."
                 }
               }
@@ -322,7 +322,7 @@
                 "500": {
                     "description": "Something went wrong."
                 },
-                "403": {
+                "401": {
                     "description": "User is not authorized - AuthorizationError."
                 }
               }
