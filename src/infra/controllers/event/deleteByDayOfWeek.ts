@@ -5,6 +5,7 @@ import {
   DeleteEventsError,
   InternalServerError,
 } from '../../../providers/errors';
+import { WeekDays } from '../../../providers/types/WeekDays';
 
 export class DeleteEventsByDayOfWeekController {
   constructor(
@@ -16,6 +17,12 @@ export class DeleteEventsByDayOfWeekController {
     const userId = request.body.user?.id;
 
     try {
+      if (!WeekDays.includes(dayOfWeek as any)) {
+        return response
+          .status(400)
+          .json({ message: 'Invalid data supplied', WeekDays });
+      }
+
       const deletedEvents = await this.deleteEventsByDayOfWeekUseCase.execute(
         dayOfWeek as string,
         userId as string,
@@ -26,15 +33,11 @@ export class DeleteEventsByDayOfWeekController {
       });
     } catch (error: unknown) {
       if (error instanceof DeleteEventsError) {
-        response.status(404).json({ message: 'Not found' });
+        response.status(404).json({ message: 'Events not found' });
       }
 
       if (error instanceof InternalServerError) {
-        response.status(500).json({ message: 'Something went wrong' });
-      }
-
-      if (error instanceof AuthorizationError) {
-        response.status(403).json({ message: 'User is not authorized' });
+        response.status(500).json({ message: 'Internal Server Error' });
       }
     }
   }

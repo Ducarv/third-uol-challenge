@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import { GetEventByIdUseCase } from '../../../domain/useCases/event/getById';
-import {
-  GetEventsError,
-  InternalServerError,
-  NotFound,
-} from '../../../providers/errors';
+import { InternalServerError, NotFound } from '../../../providers/errors';
 
 export class GetEventByIdController {
   constructor(private getEventByIdUseCase: GetEventByIdUseCase) {}
@@ -18,14 +14,19 @@ export class GetEventByIdController {
       }
 
       const event = await this.getEventByIdUseCase.execute(id);
+
+      if (!event) {
+        return response.status(404).json({ message: 'Event not found' });
+      }
+
       response.status(200).json(event);
     } catch (error: unknown) {
-      if (error instanceof GetEventsError) {
-        response.status(404).json({ message: 'Error to get event' });
+      if (error instanceof NotFound) {
+        response.status(404).json({ message: 'Event not found' });
       }
 
       if (error instanceof InternalServerError) {
-        response.status(500).json({ message: 'Something went wrong' });
+        response.status(500).json({ message: 'Internal Server Error' });
       }
     }
   }

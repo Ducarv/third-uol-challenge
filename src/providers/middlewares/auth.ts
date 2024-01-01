@@ -19,7 +19,9 @@ export function authToken(
 
   jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      return response.status(401).json({ message: ' Token invalid' });
+      return response
+        .status(401)
+        .json({ error: 'Unauthorized', message: 'Not Authenticated' });
     }
 
     request.body.user = decoded;
