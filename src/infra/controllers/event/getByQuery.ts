@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { GetEventByQueryUseCase } from '../../../domain/useCases/event/getByQuery';
-import { GetEventsError } from '../../../providers/errors';
+import { GetEventsError, InternalServerError } from '../../../providers/errors';
 
 export class GetEventByQueryController {
   constructor(private getEventByQueryUseCase: GetEventByQueryUseCase) {}
@@ -18,6 +18,9 @@ export class GetEventByQueryController {
     } catch (error: unknown) {
       if (error instanceof GetEventsError) {
         response.status(404).json({ message: 'Not found' });
+      }
+      if (error instanceof InternalServerError) {
+        return response.status(500).json({ message: 'Internal Server Error' });
       }
     }
   }
