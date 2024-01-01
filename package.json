@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "start": "ts-node dist/app.js",
-    "build": "tsc -p .",
+    "start": "ts-node --transpile-only src/app.ts",
+    "build": "tsc --build",
     "test": "jest --coverage=true",
     "lint": "eslint . --fix --ext .ts",
     "format": "prettier --write --single-quote --trailing-comma all src/**/*.ts"
