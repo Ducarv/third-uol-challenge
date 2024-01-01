@@ -22,13 +22,14 @@ export class SignUpUserController {
 
       if (!validationResult.success) {
         return response.status(400).json({
+          message: 'Invalid input',
           errors: validationResult.error.issues,
         });
       }
 
       if (data.confirmPassword !== data.password) {
         response
-          .status(406)
+          .status(400)
           .json(
             new ConfirmPasswordError(
               'Password and Confirmation should be strict equal.',
@@ -62,12 +63,8 @@ export class SignUpUserController {
         },
       });
     } catch (error: unknown) {
-      if (error instanceof SignUpError) {
-        response.status(409).json(error.message);
-      }
-
       if (error instanceof InternalServerError) {
-        response.status(500).json(error);
+        response.status(500).json({ message: 'Internal Server Error' });
       }
     }
   }
