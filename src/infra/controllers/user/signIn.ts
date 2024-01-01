@@ -51,13 +51,15 @@ export class SingInUserController {
       });
     } catch (error: unknown) {
       if (error instanceof InternalServerError) {
-        response.status(500).json({ auth: false, message: error.message });
+        return response
+          .status(500)
+          .json({ auth: false, message: error.message });
       }
 
       if (error instanceof CannotSignIn) {
-        response
+        return response
           .status(400)
-          .json(new CannotSignIn('Invalid email or password').message);
+          .json({ auth: false, message: 'Bad credentials' });
       }
     }
   }
