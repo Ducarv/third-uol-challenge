@@ -14,6 +14,10 @@ import {
 
 const router = Router();
 
+router.get('/', (request: Request, response: Response) => {
+  response.send('Welcome to API home!');
+});
+
 router.post('/users/sign-up', async (request: Request, response: Response) => {
   await signUpUserController.handle(request, response);
 });
