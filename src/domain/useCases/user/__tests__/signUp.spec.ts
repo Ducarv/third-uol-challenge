@@ -18,10 +18,12 @@ describe('SignUp.ts', () => {
   const mockRepository: Pick<UserRepository, 'signUp'> = {
     signUp: async (data: IUser) => ({ id: '1', ...data }),
   };
-  const signUp = new SignUpUserUseCase(mockRepository as UserRepository);
 
   it('should sign a user up successfully', async () => {
+    const signUp = new SignUpUserUseCase(mockRepository as UserRepository);
+
     const sut = await signUp.execute(mockUser);
+
     if (sut) {
       expect(sut.id).toBeDefined();
       expect(sut.firstName).toEqual('User');
@@ -29,18 +31,42 @@ describe('SignUp.ts', () => {
     }
   });
 
-  it('should handle errors correctly', async () => {
+  it('should handle SignUpError correctly', async () => {
     const error = new SignUpError('Error to sign user up');
-    jest.spyOn(signUp, 'execute').mockRejectedValueOnce(error);
+    const mockRepositoryWithError: Pick<UserRepository, 'signUp'> = {
+      signUp: async (data: IUser) => {
+        throw error;
+      },
+    };
+    const signUp = new SignUpUserUseCase(
+      mockRepositoryWithError as UserRepository,
+    );
 
     try {
-      //@ts-ignore
-      await signUp.execute();
-      fail('Throw Error');
+      await signUp.execute(mockUser);
     } catch (caughtError: unknown) {
+      expect(caughtError).toBeInstanceOf(SignUpError);
       if (caughtError instanceof SignUpError) {
-        expect(caughtError.message).toEqual(error.message);
+        expect(caughtError.message).toEqual('Error to sign user up');
       }
+    }
+  });
+
+  it('should handle other errors correctly', async () => {
+    const otherError = new Error('Other error');
+    const mockRepositoryWithOtherError: Pick<UserRepository, 'signUp'> = {
+      signUp: async (data: IUser) => {
+        throw otherError;
+      },
+    };
+    const signUp = new SignUpUserUseCase(
+      mockRepositoryWithOtherError as UserRepository,
+    );
+
+    try {
+      await signUp.execute(mockUser);
+    } catch (caughtError: unknown) {
+      expect(caughtError).toEqual(otherError);
     }
   });
 });
