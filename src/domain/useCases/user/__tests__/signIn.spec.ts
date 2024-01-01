@@ -1,6 +1,6 @@
 import { SignInUserUseCase } from '../signIn'; // Nome do arquivo do caso de uso SignIn
 import { IUser } from '../../../entities/User';
-import { SignInError } from '../../../../providers/errors';
+import { CannotSignIn, SignInError } from '../../../../providers/errors';
 import { UserRepository } from '../../../../respository/user';
 
 describe('SignIn.ts', () => {
@@ -16,20 +16,13 @@ describe('SignIn.ts', () => {
     events: [],
   };
 
-  const mockRepository: Pick<UserRepository, 'signIn'> = {
-    signIn: async (email: string) => {
-      if (email === mockUser.email) {
-        const { password, confirmPassword, ...mockResponse } = mockUser;
-        return mockResponse as Partial<IUser>;
-      } else {
-        return {} as Partial<IUser>;
-      }
-    },
-  };
-
+  let mockRepository: UserRepository;
   let signIn: SignInUserUseCase;
 
   beforeEach(() => {
+    mockRepository = {
+      signIn: jest.fn(),
+    } as unknown as jest.Mocked<UserRepository>;
     signIn = new SignInUserUseCase(mockRepository as UserRepository);
   });
 
@@ -37,11 +30,15 @@ describe('SignIn.ts', () => {
     const { password, confirmPassword, ...expectedUser } =
       mockUser as Partial<IUser>;
 
+    jest.spyOn(mockRepository, 'signIn').mockResolvedValueOnce(expectedUser);
+
     const sut = await signIn.execute(mockUser.email, mockUser.password);
-    expect(sut).toEqual(expect.objectContaining(expectedUser));
+    expect(sut).toEqual(expectedUser);
   });
 
   it('should handle incorrect email or password correctly', async () => {
+    jest.spyOn(mockRepository, 'signIn').mockResolvedValueOnce({});
+
     const sut = await signIn.execute('wrongemail@mail.com', 'wrongpassword');
     expect(sut).toEqual({});
   });
@@ -57,5 +54,22 @@ describe('SignIn.ts', () => {
       expect(caughtError).toBeInstanceOf(SignInError);
       expect(caughtError).toEqual(error);
     }
+  });
+
+  it('should throw CannotSignIn error', async () => {
+    const expectEmail = 'test@mail.com';
+    const expectPassword = '';
+
+    jest
+      .spyOn(mockRepository, 'signIn')
+      .mockRejectedValueOnce(
+        new CannotSignIn('Email or/and Password cannot be empty'),
+      );
+
+    await expect(signIn.execute(expectEmail, expectPassword)).rejects.toThrow(
+      CannotSignIn,
+    );
+
+    expect(mockRepository.signIn).not.toHaveBeenCalled();
   });
 });

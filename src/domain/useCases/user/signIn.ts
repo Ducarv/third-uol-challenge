@@ -16,6 +16,9 @@ export class SignInUserUseCase {
       if (error instanceof SignInError) {
         throw new SignInError('Error to sign user in.');
       }
+      if (error instanceof CannotSignIn) {
+        throw new CannotSignIn('Email or/and Password cannot be empty');
+      }
     }
   }
 }
