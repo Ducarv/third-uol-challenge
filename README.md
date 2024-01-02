@@ -12,6 +12,8 @@ ensuring scalability and reliability in deployment.
 
 - [Render deploy link](https://last-challenge-compass-api.onrender.com)
 
+- [API Docs](https://last-challenge-compass-api.onrender.com/api/v1/docs)
+
 ## Setup & Build Instructions
 
 ### 1. Installation
