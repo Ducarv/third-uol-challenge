@@ -10,9 +10,9 @@ ensuring scalability and reliability in deployment.
 
 ## Deploy link
 
-- [Render deploy link](https://last-challenge-compass-api.onrender.com)
+- [Render deploy link](https://docker-api-last-challenge.onrender.com)
 
-- [API Docs](https://last-challenge-compass-api.onrender.com/api/v1/docs)
+- [API Docs](https://docker-api-last-challenge.onrender.com/api/v1/docs)
 
 ## Setup & Build Instructions
 
