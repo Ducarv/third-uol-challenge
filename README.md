@@ -8,6 +8,10 @@ The API provides endpoints to create, retrieve, and delete both users and events
 querying events based on optional parameters. The project utilizes Docker for containerization and AWS services,
 ensuring scalability and reliability in deployment.
 
+## Deploy link
+
+- [Render deploy link](https://last-challenge-compass-api.onrender.com)
+
 ## Setup & Build Instructions
 
 ### 1. Installation
