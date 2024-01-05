@@ -4,7 +4,7 @@ import { CannotSignIn, InternalServerError } from '../../../providers/errors';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 
-export class SingInUserController {
+export class SignInUserController {
   constructor(private signInUserUseCase: SignInUserUseCase) {}
 
   async handle(request: Request, response: Response) {
@@ -18,13 +18,13 @@ export class SingInUserController {
       const user = await this.signInUserUseCase.execute(email, password);
 
       if (!user) {
-        throw new CannotSignIn('Invalid email or password');
+        throw new CannotSignIn('Invalid user.');
       }
 
       const passwordMatch = bcrypt.compare(password, user.password as string);
 
       if (!passwordMatch) {
-        throw new CannotSignIn('Invalid email or password');
+        throw new CannotSignIn('Password NOT matching.');
       }
 
       const secret = process.env.SECRET_KEY as jwt.Secret;
@@ -59,7 +59,7 @@ export class SingInUserController {
       if (error instanceof CannotSignIn) {
         return response
           .status(400)
-          .json({ auth: false, message: 'Bad credentials' });
+          .json({ auth: false, message: error.message });
       }
     }
   }
